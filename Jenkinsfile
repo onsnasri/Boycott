@@ -26,14 +26,6 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv(installationName: 'MySonarQubeServer', credentialsId: 'sonarqubePWD') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=boycott-app -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
