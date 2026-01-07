@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_USERNAME = 'onsnas'
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/boycott-app:latest"
-        KUBECONFIG_CREDENTIALS = 'kubeconfig-file'
+        KUBECONFIG_CREDENTIALS = 'kuberconfig-file'
         NAMESPACE = 'boycott'
     }
 
