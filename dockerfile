@@ -1,27 +1,15 @@
-# builder stage (example for a Node app)
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
+# Étape 1 : image JDK
+FROM eclipse-temurin:17-jdk-alpine
 
-# runtime stage
-FROM node:18-alpine
-# create a non-root user and use a minimal base
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Étape 2 : dossier de travail
 WORKDIR /app
 
-# copy only production artifacts
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY package.json .
+# Étape 3 : copier le JAR généré par Maven
+COPY target/boycot-0.0.1-SNAPSHOT.jar app.jar
 
-# ensure files are not writable by others if possible
-RUN chown -R appuser:appgroup /app && chmod -R 755 /app
+# Étape 4 : exposer le port
+EXPOSE 8080
 
-USER appuser
-ENV NODE_ENV=production
-# Drop capabilities at runtime via container runtime / k8s, and set a default no-new-privileges in container spec
-EXPOSE 3000
-CMD ["node", "dist/index.js"]
+# Étape 5 : lancer l’application
+ENTRYPOINT ["java","-jar","app.jar"]
+
