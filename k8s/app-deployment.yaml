@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boycott-app
+  namespace: boycott
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boycott-app
+  template:
+    metadata:
+      labels:
+        app: boycott-app
+    spec:
+      containers:
+        - name: boycott-app
+          image: zainebkallel/boycott-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/boycott_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: zainebss
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+

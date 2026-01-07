@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Boycott Checker</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            width: 380px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2a5298;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2a5298;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1e3c72;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .danger {
+            background-color: #ffe6e6;
+            color: #c0392b;
+        }
+
+        .success {
+            background-color: #e9f9ee;
+            color: #27ae60;
+        }
+
+        ul {
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Boycott Checker</h2>
+
+    <form method="post" action="/check">
+        <input type="text" name="product" placeholder="Nom du produit" required>
+        <button type="submit">Vérifier</button>
+    </form>
+
+    <div th:if="${boycott == true}" class="result danger">
+        ❌ Produit à boycotter
+        <p>Alternatives :</p>
+        <ul>
+            <li th:each="alt : ${alternatives}" th:text="alt"></li>
+        </ul>
+    </div>
+
+    <div th:if="${boycott == false}" class="result success">
+        ✅ Produit non boycotté
+    </div>
+</div>
+
+</body>
+</html>
