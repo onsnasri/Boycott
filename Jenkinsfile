@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'dockerhub-pwd'
-        DOCKERHUB_USERNAME = 'zainebkallel'
+        DOCKERHUB_USERNAME = 'onsnas'
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/boycott-app:latest"
         KUBECONFIG_CREDENTIALS = 'kubeconfig-file'
         NAMESPACE = 'boycott'
@@ -17,7 +16,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'master', url: 'https://github.com/zaineb827/Boycott.git'
+                git branch: 'main', url: 'https://github.com/onsnasri/Boycott.git'
             }
         }
 
@@ -27,14 +26,19 @@ pipeline {
             }
         }
 
-        stage('Build & Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
-                script  {
-            withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'DOCKERHUB_TOKEN')]) {
-            sh "docker login -u ${DOCKERHUB_USERNAME} -p $DOCKERHUB_TOKEN"
-            sh "docker build -t ${IMAGE_NAME} ."
-            sh "docker push ${IMAGE_NAME}"
+                script {
+                    sh "docker build -t ${IMAGE_NAME} ."
+                }
+            }
         }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKERHUB_TOKEN')]) {
+                    sh "echo $DOCKERHUB_TOKEN | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
+                    sh "docker push ${IMAGE_NAME}"
                 }
             }
         }
@@ -74,4 +78,3 @@ pipeline {
         }
     }
 }
-
