@@ -4,9 +4,7 @@ import com.code.boycot.entity.Product;
 import com.code.boycot.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -20,17 +18,30 @@ public class ProductService {
     public Map<String, Object> checkProduct(String productName) {
 
         Map<String, Object> result = new HashMap<>();
-        Optional<Product> product = repository.findByNameIgnoreCase(productName);
 
-        if (product.isPresent() && product.get().isBoycott()) {
-            result.put("boycott", true);
-            result.put(
-                    "alternatives",
-                    product.get().getAlternatives().split(",")
-            );
+        Optional<Product> optionalProduct =
+                repository.findByNameIgnoreCase(productName.trim());
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+
+            result.put("boycott", product.isBoycott());
+
+            if (product.isBoycott() && product.getAlternatives() != null) {
+
+                List<String> alternatives = Arrays.stream(
+                                product.getAlternatives().split(",")
+                        )
+                        .map(String::trim)   // enlève les espaces
+                        .toList();
+
+                result.put("alternatives", alternatives);
+            }
+
         } else {
             result.put("boycott", false);
         }
+
         return result;
     }
 }

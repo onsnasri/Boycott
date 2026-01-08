@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background: #f4f6f8; /* fond clair */
             height: 100vh;
             margin: 0;
             display: flex;
@@ -18,15 +18,31 @@
         .card {
             background: white;
             padding: 30px;
-            width: 380px;
+            width: 420px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             text-align: center;
         }
 
+        .flag {
+            margin-bottom: 15px;
+        }
+
+        .flag img {
+            width: 90px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
         h2 {
-            margin-bottom: 20px;
-            color: #2a5298;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 25px;
         }
 
         input[type="text"] {
@@ -43,15 +59,14 @@
             padding: 12px;
             border: none;
             border-radius: 8px;
-            background-color: #2a5298;
+            background-color: #007a3d; /* vert Palestine */
             color: white;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s ease;
         }
 
         button:hover {
-            background-color: #1e3c72;
+            background-color: #006531;
         }
 
         .result {
@@ -64,20 +79,24 @@
         .danger {
             background-color: #ffe6e6;
             color: #c0392b;
+            border-left: 5px solid #ce1126;
         }
 
         .success {
             background-color: #e9f9ee;
-            color: #27ae60;
+            color: #1e8449;
+            border-left: 5px solid #007a3d;
         }
 
         ul {
             text-align: left;
             padding-left: 20px;
+            margin-top: 10px;
         }
 
         li {
-            margin: 5px 0;
+            margin: 6px 0;
+            font-weight: normal;
         }
     </style>
 </head>
@@ -85,24 +104,38 @@
 <body>
 
 <div class="card">
+
+    <!-- Drapeau de la Palestine (image réelle) -->
+    <div class="flag">
+        <img src="/images/palestine.png" alt="Palestine ">
+    </div>
+
     <h2>Boycott Checker</h2>
+    <div class="subtitle">Pour une consommation responsable</div>
 
     <form method="post" action="/check">
         <input type="text" name="product" placeholder="Nom du produit" required>
         <button type="submit">Vérifier</button>
     </form>
 
-    <div th:if="${boycott == true}" class="result danger">
+    <!-- PRODUIT BOYCOTTÉ -->
+    <div th:if="${boycott != null and boycott}" class="result danger">
         ❌ Produit à boycotter
-        <p>Alternatives :</p>
-        <ul>
-            <li th:each="alt : ${alternatives}" th:text="alt"></li>
+
+        <p th:if="${alternatives != null}">Alternatives recommandées :</p>
+
+        <ul th:if="${alternatives != null}">
+            <li th:each="alt : ${alternatives}"
+                th:text="${alt}">
+            </li>
         </ul>
     </div>
 
-    <div th:if="${boycott == false}" class="result success">
+    <!-- PRODUIT NON BOYCOTTÉ -->
+    <div th:if="${boycott != null and !boycott}" class="result success">
         ✅ Produit non boycotté
     </div>
+
 </div>
 
 </body>

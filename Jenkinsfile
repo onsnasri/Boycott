@@ -51,6 +51,7 @@ pipeline {
                         sh "kubectl --kubeconfig=$KUBECONFIG apply -n ${NAMESPACE} -f k8s/mysql-deployment.yaml"
                         sh "kubectl --kubeconfig=$KUBECONFIG apply -n ${NAMESPACE} -f k8s/mysql-service.yaml"
                         sh "kubectl --kubeconfig=$KUBECONFIG apply -n ${NAMESPACE} -f k8s/app-deployment.yaml"
+                        sh "kubectl --kubeconfig=$KUBECONFIG rollout restart deployment boycott-app -n ${NAMESPACE}"
                         sh "kubectl --kubeconfig=$KUBECONFIG apply -n ${NAMESPACE} -f k8s/app-service.yaml"
                     }
                 }
